@@ -1,15 +1,15 @@
 import { request } from "./api.js";
 import Editor from "./Editor.js";
-import { setItem, getItem } from "./storage.js";
+import { setItem, getItem, removeItem } from "./storage.js";
 
 export default function PostEditPage({ $target, initialState }) {
   const $page = document.createElement("div");
 
   this.state = initialState;
 
-  const TEMP_POST_SAVE_KEY = `temp-post-${this.state.postId}`;
+  let postLocalSaveKey = `temp-post-${this.state.postId}`;
 
-  const post = getItem(TEMP_POST_SAVE_KEY, {
+  const post = getItem(postLocalSaveKey, {
     title: "",
     content: "",
   });
@@ -23,17 +23,30 @@ export default function PostEditPage({ $target, initialState }) {
       if (timer !== null) {
         clearTimeout(timer);
       }
-      timer = setTimeout(() => {
-        setItem(TEMP_POST_SAVE_KEY, {
+      timer = setTimeout(async () => {
+        setItem(postLocalSaveKey, {
           ...post,
-          tempSaveData: new Date(),
+          tempSaveDate: new Date(),
         });
+
+        const isNew = this.state.postId === "new";
+        if (isNew) {
+          const createdPost = await request("/posts", {
+            method: "POST",
+            body: JSON.stringify(post),
+          });
+
+          history.replaceState(null, null, `/posts/${createdPost.id}`);
+          removeItem(postLocalSaveKey);
+        } else {
+        }
       }, 1000);
     },
   });
 
   this.setState = async (nextState) => {
     if (this.state.postId !== nextState.postId) {
+      postLocalSaveKey = `temp-post-${nextState.postId}`;
       this.state = nextState;
       await fetchPost();
       return;
@@ -42,7 +55,12 @@ export default function PostEditPage({ $target, initialState }) {
 
     this.render();
 
-    editor.setState(this.state.post);
+    editor.setState(
+      this.state.post || {
+        title: "",
+        content: "",
+      }
+    );
   };
 
   this.render = () => {
@@ -55,6 +73,20 @@ export default function PostEditPage({ $target, initialState }) {
     if (postId !== "new") {
       const post = await request(`/posts/${postId}`);
 
+      const tempPost = getItem(postLocalSaveKey, {
+        title: "",
+        content: "",
+      });
+
+      if (tempPost.tempSaveDate && tempPost.tempSaveDate > post.updated_at) {
+        if (confirm("저장되지 않은 임시 데이터가 있습니다. 불러올까요?")) {
+          this.setState({
+            ...this.state,
+            post: tempPost,
+          });
+          return;
+        }
+      }
       this.setState({
         ...this.state,
         post,
