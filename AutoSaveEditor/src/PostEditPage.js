@@ -1,6 +1,6 @@
 import { request } from "./api.js";
 import Editor from "./Editor.js";
-import { push } from "./router.js";
+import LinkButton from "./Linkbutton.js";
 import { setItem, getItem, removeItem } from "./storage.js";
 
 export default function PostEditPage({ $target, initialState }) {
@@ -54,7 +54,16 @@ export default function PostEditPage({ $target, initialState }) {
     if (this.state.postId !== nextState.postId) {
       postLocalSaveKey = `temp-post-${nextState.postId}`;
       this.state = nextState;
-      await fetchPost();
+
+      if (this.state.postId === "new") {
+        const post = getItem(postLocalSaveKey, {
+          title: "",
+          content: "",
+        });
+        editor.setState(post);
+      } else {
+        await fetchPost();
+      }
       return;
     }
     this.state = nextState;
@@ -100,10 +109,11 @@ export default function PostEditPage({ $target, initialState }) {
     }
   };
 
-  const $moveListButton = document.createElement("button");
-  $moveListButton.innerHTML = "목록으로";
-  $page.appendChild($moveListButton);
-  $moveListButton.addEventListener("click", () => {
-    push("/");
+  new LinkButton({
+    $target: $page,
+    initialState: {
+      text: "목록으로 이동",
+      link: "/",
+    },
   });
 }
