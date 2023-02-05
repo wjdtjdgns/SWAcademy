@@ -5,7 +5,10 @@ export default function Editor({
 }) {
   const $editor = document.createElement("div");
 
-  let isInitialize = false;
+  $editor.innerHTML = `
+      <input type="text" name="title" style="width:600px;" />
+      <div name="content" contentEditable="true" style="width:600px; height:400px; border:1px solid black; padding:8px"></div>
+    `;
 
   this.state = initialState;
 
@@ -13,31 +16,41 @@ export default function Editor({
 
   this.setState = (nextState) => {
     this.state = nextState;
-    $editor.querySelector("[name=title]").value = this.state.title;
-    $editor.querySelector("[name=content]").value = this.state.content;
+
     this.render();
   };
 
   this.render = () => {
-    if (!isInitialize) {
-      $editor.innerHTML = `
-      <input type="text" name="title" style="width:600px;" value="${this.state.title}" />
-      <textarea name="content" style="width:600px; height:400px;">${this.state.content}</textarea>
-    `;
-      isInitialize = true;
-    }
+    const ricthContent = this.state.content
+      .split("\n")
+      .map((line) => {
+        if (line.indexOf("# ") === 0) {
+          return `<h1>${line.substr(2)}</h1>`;
+        } else if (line.indexOf("## ") === 0) {
+          return `<h2>${line.substr(3)}</h2>`;
+        } else if (line.indexOf("### ") === 0) {
+          return `<h3>${line.substr(4)}</h3>`;
+        }
+        return line;
+      })
+      .join("<br>");
+
+    $editor.querySelector("[name=title]").value = this.state.title;
+    $editor.querySelector("[name=content]").innerHTML = ricthContent;
   };
   this.render();
 
-  $editor.addEventListener("keyup", (e) => {
-    const { target } = e;
+  $editor.querySelector("[name=title]").addEventListener("keyup", (e) => {
+    const nextState = { ...this.state, title: e.target };
+    this.setState(nextState);
+    onEditing(this.state);
+  });
 
-    const name = target.getAttribute("name");
-
-    if (this.state[name] !== undefined) {
-      const nextState = { ...this.state, [name]: target.value };
-      this.setState(nextState);
-      onEditing(this.state);
-    }
+  $editor.querySelector("[name=content]").addEventListener("input", (e) => {
+    const nextState = {
+      ...this.state,
+      content: e.target.innerHTML,
+    };
+    this.setState(nextState);
   });
 }
