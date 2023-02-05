@@ -1,5 +1,6 @@
 import { request } from "./api.js";
 import Editor from "./Editor.js";
+import { push } from "./router.js";
 import { setItem, getItem, removeItem } from "./storage.js";
 
 export default function PostEditPage({ $target, initialState }) {
@@ -99,5 +100,10 @@ export default function PostEditPage({ $target, initialState }) {
     }
   };
 
-  fetchPost();
+  const $moveListButton = document.createElement("button");
+  $moveListButton.innerHTML = "목록으로";
+  $page.appendChild($moveListButton);
+  $moveListButton.addEventListener("click", () => {
+    push("/");
+  });
 }
