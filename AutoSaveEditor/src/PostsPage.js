@@ -4,7 +4,10 @@ import PostList from "./PostList.js";
 export default function PostsPage({ $target }) {
   const $page = document.createElement("div");
 
-  const postList = new PostList({ $target, initialState: [] });
+  const postList = new PostList({
+    $target: $page,
+    initialState: [],
+  });
 
   const $newPostButton = document.createElement("button");
   $newPostButton.textContent = "New Post";
