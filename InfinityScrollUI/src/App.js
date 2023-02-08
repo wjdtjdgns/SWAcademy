@@ -69,7 +69,7 @@ export default function App({ $target }) {
     this.setState({
       ...this.state,
       nextStart: nextStart + limit,
-      photos,
+      photos: this.state.photos.concat(photos),
     });
   };
 
