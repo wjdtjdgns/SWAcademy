@@ -1,5 +1,5 @@
 export default function PhotoList({ $target, initialState, onScrollEnded }) {
-  const $photoList = document.createElement("ul");
+  const $photoList = document.createElement("div");
   $target.appendChild($photoList);
   this.state = initialState;
 
@@ -10,18 +10,27 @@ export default function PhotoList({ $target, initialState, onScrollEnded }) {
 
   this.render = () => {
     $photoList.innerHTML = `
+    <ul>
       ${this.state
         .map(
           (photo) =>
             `
-          <li>
+          <li style="list-style:none;">
             <img width="100%" src="${photo.imagePath}" />
           </li>
         `
         )
         .join("")}
+    </ul>
+    <button class="PhotoList__loadMore" style="width:100%; height 200px; font-size:20px;">Load More</button>
     `;
   };
 
   this.render();
+
+  $photoList.addEventListener("click", (e) => {
+    if (e.target.className === "PhotoList__loadMore") {
+      onScrollEnded();
+    }
+  });
 }
