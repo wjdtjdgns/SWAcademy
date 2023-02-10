@@ -1,3 +1,5 @@
+import Nodes from "./Nodes.js";
+
 const DUMMY_DATA = [
   {
     id: "1",
