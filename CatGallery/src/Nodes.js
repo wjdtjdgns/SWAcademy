@@ -13,13 +13,14 @@ export default function Nodes({ $target, initialState, onClick }) {
   this.render = () => {
     const { isRoot, nodes } = this.state;
     $nodes.innerHTML = `
+    <div class="Nodes">
       ${
         isRoot
           ? ""
           : `
         <div class="Node">
           <img src="https://cat-photos-dev-serverlessdeploymentbucket-fdpz0swy5qxq.s3.ap-northeast-2.amazonaws.com/public/images/prev.png" />
-        </div
+        </div>
       `
       }
       ${nodes
@@ -36,6 +37,8 @@ export default function Nodes({ $target, initialState, onClick }) {
       `
         )
         .join("")}
+
+    </div>
     `;
   };
 

@@ -49,7 +49,7 @@ export default function App({ $target }) {
   const nodes = new Nodes({
     $target,
     initialState: {
-      isRoot: false,
+      isRoot: true,
       nodes: DUMMY_DATA,
     },
     onClick: () => {},
