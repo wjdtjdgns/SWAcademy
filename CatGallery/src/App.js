@@ -46,7 +46,10 @@ const DUMMY_DATA = [
 export default function App({ $target }) {
   const nodes = new Nodes({
     $target,
-    initialState: DUMMY_DATA,
+    initialState: {
+      isRoot: false,
+      nodes: DUMMY_DATA,
+    },
     onClick: () => {},
   });
 }
