@@ -1,14 +1,19 @@
 import { request } from "./api.js";
 import Nodes from "./Nodes.js";
 import ImageViewer from "./ImageViewer.js";
+import Loading from "./Loading.js";
 
 export default function App({ $target }) {
   this.state = {
     isRoot: true,
+    isLoading: false,
     nodes: [],
     paths: [],
   };
 
+  const loading = new Loading({
+    $target,
+  });
   const nodes = new Nodes({
     $target,
     initialState: {
@@ -29,7 +34,7 @@ export default function App({ $target }) {
       if (node.type === "FILE") {
         this.setState({
           ...this.state,
-          selectedImageUrl: ` https://cat-photos-dev-serverlessdeploymentbucket-fdpz0swy5qxq.s3.ap-northeast-2.amazonaws.com/public${node.filePath}`,
+          selectedImageUrl: `https://cat-photos-dev-serverlessdeploymentbucket-fdpz0swy5qxq.s3.ap-northeast-2.amazonaws.com/public${node.filePath}`,
         });
       }
     },
@@ -70,15 +75,22 @@ export default function App({ $target }) {
     imageViewer.setState({
       selectedImageUrl: this.state.selectedImageUrl,
     });
+
+    loading.setState(this.state.isLoading);
   };
 
   const fetchNodes = async (id) => {
+    this.setState({
+      ...this.state,
+      isLoading: true,
+    });
     const nodes = await request(id ? `/${id}` : "/");
 
     this.setState({
       ...this.state,
       nodes,
       isRoot: id ? false : true,
+      isLoading: false,
     });
   };
 
