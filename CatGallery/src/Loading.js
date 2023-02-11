@@ -11,6 +11,7 @@ export default function Loading({ $target }) {
   };
 
   this.render = () => {
+    //로딩 대기 이미지 주소 오류
     $loading.innerHTML = `
       <div class="content">
         <img width="100%" src="https://cat-photos-dev-serverlessdeploymentbucket-fdpz0swy5qxq.s3.ap-northeast-2.amazonaws.com/public/images/nyan-cat.gif" alt="Loading" />

@@ -2,6 +2,7 @@ import { request } from "./api.js";
 import Nodes from "./Nodes.js";
 import ImageViewer from "./ImageViewer.js";
 import Loading from "./Loading.js";
+import Breadcrumb from "./Breadcrumb.js";
 
 export default function App({ $target }) {
   this.state = {
@@ -14,6 +15,29 @@ export default function App({ $target }) {
   const loading = new Loading({
     $target,
   });
+
+  const breacrumb = new Breadcrumb({
+    $target,
+    initialState: this.state.paths,
+    onClick: async (id) => {
+      if (id) {
+        const nextPaths = id ? [...this.state.paths] : [];
+        const index = nextPaths.findIndex((path) => path.id === id);
+
+        this.setState({
+          ...this.state,
+          paths: nextPaths.slice(0, index + 1),
+        });
+      } else {
+        this.setState({
+          ...this.state,
+          paths: [],
+        });
+      }
+      await fetchNodes(id);
+    },
+  });
+
   const nodes = new Nodes({
     $target,
     initialState: {
@@ -77,6 +101,8 @@ export default function App({ $target }) {
     });
 
     loading.setState(this.state.isLoading);
+
+    breacrumb.setState(this.state.paths);
   };
 
   const fetchNodes = async (id) => {
