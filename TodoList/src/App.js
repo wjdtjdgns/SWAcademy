@@ -13,6 +13,15 @@ export default function App({ $target }) {
       todos: [],
     },
     onDrop: async (todoId) => {
+      const nextTodos = [...this.state.todos];
+      const todoIndex = nextTodos.findIndex((todo) => todo._id === todoId);
+
+      nextTodos[todoIndex].isCompleted = false;
+      this.setState({
+        ...this.state,
+        todos: nextTodos,
+      });
+
       await request(`/${todoId}/toggle`, {
         method: "PUT",
       });
@@ -28,6 +37,15 @@ export default function App({ $target }) {
       todos: [],
     },
     onDrop: async (todoId) => {
+      const nextTodos = [...this.state.todos];
+      const todoIndex = nextTodos.findIndex((todo) => todo._id === todoId);
+
+      nextTodos[todoIndex].isCompleted = true;
+      this.setState({
+        ...this.state,
+        todos: nextTodos,
+      });
+
       await request(`/${todoId}/toggle`, {
         method: "PUT",
       });
