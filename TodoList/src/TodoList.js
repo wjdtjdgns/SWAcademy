@@ -1,5 +1,6 @@
 export default function TodoList({ $target, initialState }) {
   const $todoList = document.createElement("div");
+  $todoList.setAttribute("droppable", "true");
   $target.appendChild($todoList);
   this.state = initialState;
 
@@ -14,7 +15,10 @@ export default function TodoList({ $target, initialState }) {
       <h2>${title}</h2>
       <ul>
         ${todos
-          .map((todo) => `<li draggable="true">${todo.content}</li>`)
+          .map(
+            (todo) =>
+              `<li data-id="${todo._id}" draggable="true">${todo.content}</li>`
+          )
           .join("")}
       </ul>
       ${todos.length === 0 ? "설정된 일이 없습니다." : ""}
@@ -22,4 +26,20 @@ export default function TodoList({ $target, initialState }) {
   };
 
   this.render();
+
+  $todoList.addEventListener("dragstart", (e) => {
+    const $li = e.target.closest("li");
+
+    e.dataTransfer.setData("todoId", $li.dataset.id);
+  });
+
+  $todoList.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  });
+
+  $todoList.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const droppedTodoId = e.dataTransfer.getData("todoId");
+  });
 }
