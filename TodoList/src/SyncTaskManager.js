@@ -1,12 +1,15 @@
 import { request } from "./api.js";
 
 export default function SyncTaskManager() {
-  const tasks = [];
+  let tasks = [];
 
   this.addTask = (task) => {
     tasks.push(task);
   };
 
+  this.removeTask = (urlPattern) => {
+    tasks = tasks.filter((task) => !task.url.includes(urlPattern));
+  };
   this.run = async () => {
     if (tasks.length > 0) {
       const task = tasks.shift();

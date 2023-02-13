@@ -42,6 +42,8 @@ export default function App({ $target }) {
       todos: nextTodos,
     });
 
+    tasks.removeTask(`/${todoId}`);
+
     tasks.addTask({
       url: `/${todoId}`,
       method: "DELETE",
