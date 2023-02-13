@@ -1,9 +1,9 @@
 import { request } from "./api.js";
 import TodoList from "./TodoList.js";
-import TaskManager from "./TaskManager.js";
+import SyncTaskManager from "./SyncTaskManager.js";
 
 export default function App({ $target }) {
-  const tasks = new TaskManager();
+  const tasks = new SyncTaskManager();
   this.state = {
     todos: [],
   };
@@ -24,10 +24,15 @@ export default function App({ $target }) {
         todos: nextTodos,
       });
 
-      tasks.addTask(async () => {
-        await request(`/${todoId}/toggle`, {
-          method: "PUT",
-        });
+      // tasks.addTask(async () => {
+      //   await request(`/${todoId}/toggle`, {
+      //     method: "PUT",
+      //   });
+      // });
+
+      tasks.addTask({
+        url: `/${todoId}/toggle`,
+        method: "PUT",
       });
     },
   });
@@ -48,13 +53,16 @@ export default function App({ $target }) {
         todos: nextTodos,
       });
 
-      tasks.addTask(async () => {
-        await request(`/${todoId}/toggle`, {
-          method: "PUT",
-        });
-      });
+      // tasks.addTask(async () => {
+      //   await request(`/${todoId}/toggle`, {
+      //     method: "PUT",
+      //   });
+      // });
 
-      await fetchTodos();
+      tasks.addTask({
+        url: `/${todoId}/toggle`,
+        method: "PUT",
+      });
     },
   });
 
