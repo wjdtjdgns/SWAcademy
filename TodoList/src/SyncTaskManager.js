@@ -14,6 +14,8 @@ export default function SyncTaskManager() {
       await request(task.url, {
         method: task.method || "GET",
       });
+
+      this.run();
     }
   };
 }
