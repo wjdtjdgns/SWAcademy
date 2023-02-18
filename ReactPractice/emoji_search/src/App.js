@@ -10,7 +10,7 @@ function App() {
     <div>
       <Header />
       <SearchBox onSearch={setKeyword} />
-      <EmojiList emojis={emojiJson} />
+      <EmojiList emojis={emojiJson} keyword={keyword} />
     </div>
   );
 }

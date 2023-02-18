@@ -6,12 +6,19 @@ const Container = styled.ul`
   padding: 0;
 `;
 
-const EmojiList = ({ emojis }) => {
+const EmojiList = ({ emojis, keyword }) => {
   return (
     <Container>
-      {emojis.map((emoji) => (
-        <EmojiListItem key={emoji.title} emoji={emoji} />
-      ))}
+      {emojis
+        .filter(
+          (emoji) =>
+            emoji.title.indexOf(keyword) >= 0 ||
+            emoji.keywords.indexOf(keyword) >= 0
+        )
+        .slice(0, 10)
+        .map((emoji) => (
+          <EmojiListItem key={emoji.title} emoji={emoji} />
+        ))}
     </Container>
   );
 };
