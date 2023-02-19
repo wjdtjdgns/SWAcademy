@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import Toggle from "./Toggle";
 
 const ListItem = styled.li`
   display: flex;
@@ -13,11 +14,29 @@ const ListItem = styled.li`
   box-sizing: border-box;
 `;
 
+const Content = styled.span`
+  flex: 1;
+  margin-left: 8px;
+  font-size: 14px;
+`;
+
+const RemoveButton = styled.button`
+  width: 60px;
+  height: 24px;
+  margin-left: 8px;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  background-color: red;
+  cursor: pointer;
+`;
+
 const Task = ({ content, complete, ...props }) => {
   return (
     <ListItem {...props}>
-      <input type="checkbox" defaultChecked={complete} />
-      <span>{content}</span>
+      <Toggle on={complete} />
+      <Content>{content}</Content>
+      <RemoveButton>Remove</RemoveButton>
     </ListItem>
   );
 };
