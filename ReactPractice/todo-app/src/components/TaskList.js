@@ -15,7 +15,7 @@ const UnorderedList = styled.ul`
 
 const TaskList = (props) => {
   return (
-    <UnorderedList>
+    <UnorderedList {...props}>
       <Task content="Test" />
       <Task content="Test" />
       <Task content="Test" />
