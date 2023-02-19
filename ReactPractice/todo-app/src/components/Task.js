@@ -19,6 +19,7 @@ const Content = styled.span`
   flex: 1;
   margin-left: 8px;
   font-size: 14px;
+  text-decoration: ${({ complete }) => (complete ? "line-through" : "none")};
 `;
 
 const RemoveButton = styled.button`
@@ -37,7 +38,7 @@ const Task = ({ id, content, complete, ...props }) => {
   return (
     <ListItem {...props}>
       <Toggle on={complete} onChange={(e) => updateTask(id, e.target.value)} />
-      <Content>{content}</Content>
+      <Content complete={complete}>{content}</Content>
       <RemoveButton onClick={() => removeTask(id)}>Remove</RemoveButton>
     </ListItem>
   );
